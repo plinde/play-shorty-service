@@ -1,0 +1,58 @@
+{
+	"id": "3b35318a-975e-1b2c-6d03-b9efd634a883",
+	"name": "play-shorty-service",
+	"description": "",
+	"order": [
+		"0a428a09-2a1c-185d-0261-52b3aa5ece0f",
+		"c9212f0b-676e-c39c-f018-824ce86c25b9"
+	],
+	"folders": [],
+	"timestamp": 1471903816916,
+	"owner": 0,
+	"public": false,
+	"published": false,
+	"requests": [
+		{
+			"id": "0a428a09-2a1c-185d-0261-52b3aa5ece0f",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://localhost:9000/shorten",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "3b35318a-975e-1b2c-6d03-b9efd634a883",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/shorten",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1471903827955,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n    \"url\" : \"www.facebook.com\"\n}"
+		},
+		{
+			"id": "c9212f0b-676e-c39c-f018-824ce86c25b9",
+			"headers": "Content-Type: application/json\n",
+			"url": "http://localhost:9000/elongate",
+			"pathVariables": {},
+			"preRequestScript": null,
+			"method": "POST",
+			"collectionId": "3b35318a-975e-1b2c-6d03-b9efd634a883",
+			"data": [],
+			"dataMode": "raw",
+			"name": "/elongate",
+			"description": "",
+			"descriptionFormat": "html",
+			"time": 1471903842408,
+			"version": 2,
+			"responses": [],
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"rawModeData": "{\n    \"hash\" : \"660328a7f9004d462085aa67a82065db\"\n}"
+		}
+	]
+}
