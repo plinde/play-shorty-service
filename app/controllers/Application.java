@@ -28,30 +28,28 @@ public class Application extends Controller {
         return ok(index.render("Your new application is ready."));
     }
 
+    @BodyParser.Of(BodyParser.Json.class)
+    public static Result lookup() throws IOException {
+
+        JsonNode json = request().body().asJson();
+        String hash = json.findPath("hash").textValue();
+        System.out.println(hash);
+
+        Map<String, String> clientResponse = buildClientResponse(hash);
+
+        return ok(Json.toJson(clientResponse));
+    }
+
     public static Result reroute(String hash) throws IOException {
 
         System.out.println(hash);
 
-        JestClient client = getJestClient();
-
-        Map<String, String> lookupResult = lookupUrlForHash(hash);
-        Map<String, String> clientResponse = new LinkedHashMap<String,String>();
-
-        if (Boolean.valueOf(lookupResult.get("success"))) {
-            clientResponse.put("hash", hash);
-            clientResponse.put("url", lookupResult.get("url"));
-            clientResponse.put("found", "true");
-        } else {
-            clientResponse.put("hash", hash);
-            clientResponse.put("url", lookupResult.get("url"));
-            clientResponse.put("found", "false");
-        }
-
+        Map<String, String> clientResponse = buildClientResponse(hash);
+        
         //http://stackoverflow.com/questions/10962694/how-to-redirect-to-external-url-in-play-framework-2-0-java
-        String redirectUrl = lookupResult.get("url");
+        String redirectUrl = clientResponse.get("url");
         System.out.println(redirectUrl);
-//        return temporaryRedirect(redirectUrl);
-        return redirect("http://www.example.com");
+        return redirect(redirectUrl);
 
     }
 
@@ -73,18 +71,11 @@ public class Application extends Controller {
         // build md5 hash for the url
         String hash = buildHashForUrl(url);
 
-        Map<String, String> lookupResult = lookupUrlForHash(hash);
-        Map<String, String> clientResponse = new LinkedHashMap<String,String>();
+        Map<String, String> clientResponse = buildClientResponse(hash);
 
+        if (Boolean.valueOf(clientResponse.get("success"))) {
 
-        if (Boolean.valueOf(lookupResult.get("success"))) {
-            clientResponse.put("hash", hash);
-            clientResponse.put("url", lookupResult.get("url"));
-            clientResponse.put("found", "true");
         } else {
-            clientResponse.put("hash", hash);
-            clientResponse.put("url", lookupResult.get("url"));
-            clientResponse.put("found", "false");
 
             System.out.println("no existing value found for hash: " + hash);
             System.out.println("attempting to index for hash: " + hash);
@@ -110,34 +101,6 @@ public class Application extends Controller {
 
         return hash;
     }
-
-
-    @BodyParser.Of(BodyParser.Json.class)
-    public static Result enlongate() throws IOException {
-
-        JsonNode json = request().body().asJson();
-
-        String hash = json.findPath("hash").textValue();
-
-        System.out.println(hash);
-
-        Map<String, String> lookupResult = lookupUrlForHash(hash);
-        Map<String, String> clientResponse = new LinkedHashMap<String,String>();
-
-        if (Boolean.valueOf(lookupResult.get("success"))) {
-            clientResponse.put("hash", hash);
-            clientResponse.put("url", lookupResult.get("url"));
-            clientResponse.put("found", "true");
-        } else {
-            clientResponse.put("hash", hash);
-            clientResponse.put("url", lookupResult.get("url"));
-            clientResponse.put("found", "false");
-        }
-
-        System.out.println(clientResponse.toString());
-        return ok(Json.toJson(clientResponse));
-    }
-
 
     public static JestClient getJestClient() {
 
@@ -222,6 +185,24 @@ public class Application extends Controller {
         return;
 
 
+    }
+
+    private static Map<String, String> buildClientResponse(String hash) throws IOException {
+
+        Map<String, String> lookupResult = lookupUrlForHash(hash);
+        Map<String, String> clientResponse = new LinkedHashMap<String,String>();
+
+        if (Boolean.valueOf(lookupResult.get("success"))) {
+            clientResponse.put("hash", hash);
+            clientResponse.put("url", lookupResult.get("url"));
+            clientResponse.put("found", "true");
+        } else {
+            clientResponse.put("hash", hash);
+            clientResponse.put("url", lookupResult.get("url"));
+            clientResponse.put("found", "false");
+        }
+
+        return clientResponse;
     }
 
 }

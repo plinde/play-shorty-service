@@ -5,10 +5,10 @@
 # Home page
 GET     /                               controllers.Application.index
 
-GET     /api/reroute/:hash                    controllers.Application.reroute(hash: String)
+GET     /api/reroute/:hash              controllers.Application.reroute(hash: String)
 
 POST    /api/shorten                    controllers.Application.shorten
-POST    /api/elongate                   controllers.Application.enlongate
+POST    /api/lookup                     controllers.Application.lookup
 
 
 # Map static resources from the /public folder to the /assets URL path

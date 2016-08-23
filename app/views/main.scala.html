@@ -23,12 +23,12 @@
             <input type="submit" value="Shorten">
         </form>
 
-        <form id="elongate-form" action="/api/elongate" method="POST">
+        <form id="lookup-form" action="/api/lookup" method="POST">
             <input name="hash" type="text" value="8389d7d76f5b7f449cfb71a3d053b96b">
-            <input type="submit" value="Elongate">
+            <input type="submit" value="Lookup">
         </form>
 
-        <form id="redirect-form" action="/api/redirect" method="POST">
+        <form id="redirect-form" action="/api/lookup" method="POST">
             <input name="hash" type="text" value="8389d7d76f5b7f449cfb71a3d053b96b">
             <input type="submit" value="Redirect">
         </form>
@@ -75,8 +75,7 @@
                                 $("span#short-text").html(response["error"]);
 
                             } else {
-                                $("span#short-text").html(window.location + response["hash"]);
-
+                                $("span#short-text").html(window.location + "api/reroute/" + response["hash"]);
                             }
 
                         },
@@ -90,7 +89,7 @@
 
         <script>
 
-                $( "#elongate-form" ).submit(function( event ) {
+                $( "#lookup-form" ).submit(function( event ) {
 
                     // Stop form from submitting normally
                     event.preventDefault();
@@ -121,8 +120,7 @@
                                 $("span#short-text").html(response["error"]);
 
                             } else {
-                                $("span#short-text").html(window.location + response["hash"]);
-
+                                $("span#short-text").html(window.location + "api/reroute/" + response["hash"]);
                             }
 
                         },
@@ -167,8 +165,8 @@
                                 $("span#short-text").html(response["error"]);
 
                             } else {
-                                $("span#short-text").html(window.location + response["hash"]);
-
+                                $("span#short-text").html(window.location + "api/reroute/" + response["hash"]);
+                                window.location = window.location + "api/reroute/" + response["hash"];
                             }
 
                         },
