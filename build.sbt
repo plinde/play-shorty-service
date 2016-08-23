@@ -14,3 +14,11 @@ libraryDependencies ++= Seq( javaJdbc ,  cache , javaWs,
 unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )  
 
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
+
+// setting a maintainer which is used for all packaging types
+maintainer := "Peter Linde"
+
+// exposing the play ports
+dockerExposedPorts in Docker := Seq(9000)
+
+// run this with: docker run -p 9000:9000 play-2-3:1.0-SNAPSHOT

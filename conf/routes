@@ -10,7 +10,6 @@ GET     /api/reroute/:hash              controllers.Application.reroute(hash: St
 POST    /api/shorten                    controllers.Application.shorten
 POST    /api/lookup                     controllers.Application.lookup
 
-
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
 

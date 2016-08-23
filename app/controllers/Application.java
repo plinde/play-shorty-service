@@ -106,10 +106,16 @@ public class Application extends Controller {
 
     public static JestClient getJestClient() {
 
+        String ELASTICSEARCH_PROTO = System.getProperty("ELASTICSEARCH_PROTO", "http");
+        String ELASTICSEARCH_HOST = System.getProperty("ELASTICSEARCH_HOST", "localhost");
+        String ELASTICSEARCH_PORT = System.getProperty("ELASTICSEARCH_PORT", "9200");
+        String ELASTICSEARCH_USER = System.getProperty("ELASTICSEARCH_USER", "elastic");
+        String ELASTICSEARCH_PASS = System.getProperty("ELASTICSEARCH_PASS", "changeme");
+
         JestClientFactory factory = new JestClientFactory();
         factory.setHttpClientConfig(new HttpClientConfig
-                .Builder("http://localhost:9200")
-                .defaultCredentials("elastic", "changeme")
+                .Builder(ELASTICSEARCH_PROTO+"://"+ELASTICSEARCH_HOST+":"+ELASTICSEARCH_PORT)
+                .defaultCredentials(ELASTICSEARCH_USER, ELASTICSEARCH_PASS)
                 .multiThreaded(true)
                 .build());
         JestClient client = factory.getObject();
