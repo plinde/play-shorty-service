@@ -25,8 +25,83 @@ import java.util.Map;
 public class Application extends Controller {
 
     public static Result index() {
-
         return ok(index.render("Your new application is ready."));
+    }
+
+    public static Result reroute(String hash) {
+
+
+        System.out.println(hash);
+
+        JestClientFactory factory = new JestClientFactory();
+        factory.setHttpClientConfig(new HttpClientConfig
+                .Builder("http://localhost:9200")
+                .defaultCredentials("elastic", "changeme")
+                .multiThreaded(true)
+                .build());
+        JestClient client = factory.getObject();
+
+
+        // first do a query to find if we already have a match
+
+        Get get = new Get.Builder("shorty", hash).type("url").build();
+        JestResult result = null;
+        try {
+            result = client.execute(get);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        JsonObject jsonResponse = result.getJsonObject();
+
+        Map<String, String> clientResponse = new LinkedHashMap<String,String>();
+        clientResponse.put("hash", hash);
+
+        if (jsonResponse.has("found")) {
+
+            //if we do, then naively return the existing short URL
+
+            Boolean resultBoolean = jsonResponse.get("found").getAsBoolean();
+
+            if (resultBoolean) {
+
+                System.out.println("existing value found for hash: " + hash);
+
+                System.out.println(jsonResponse.toString());
+
+
+                if (jsonResponse.has("_source")) {
+//
+//                    String url = jsonResponse.get("_source").getAsString();
+//
+                    JsonObject sourceJson = jsonResponse.get("_source").getAsJsonObject();
+                    String url = sourceJson.get("url").getAsString();
+
+                    clientResponse.put("url", url);
+                    clientResponse.put("found", "true");
+
+                    System.out.println("returning url to the user: " + url);  //+ url.toString());
+                }
+
+            } else {
+
+                //if we don't, then return the generated short URL and persist it
+                //we can use the md5hash as the _id in elasticsearch to make this more efficient?
+
+                System.out.println("no value found for hash: " + hash);
+
+                clientResponse.put("found", "false");
+
+
+            }
+        }
+
+        //http://stackoverflow.com/questions/10962694/how-to-redirect-to-external-url-in-play-framework-2-0-java
+        String redirectUrl = clientResponse.get("url");
+        System.out.println(redirectUrl);
+//        return temporaryRedirect(redirectUrl);
+        return redirect("http://www.example.com");
+
+
     }
 
     @BodyParser.Of(BodyParser.Json.class)
@@ -34,9 +109,19 @@ public class Application extends Controller {
 
         JsonNode json = request().body().asJson();
 
-        String url = json.findPath("url").textValue();
+        String url = json.findPath("url").textValue().trim();
 
         System.out.println(url);
+
+        if (!url.matches("^(http|https)://.*$")) {
+
+            Map<String, String> clientResponse = new LinkedHashMap<String, String>();
+            clientResponse.put("url", url);
+            clientResponse.put("error", "The provided URL: '" + url + "' does not contain a valid protocol; valid protocols are: http. https");
+
+            return ok(Json.toJson(clientResponse));
+        }
+
 
         JestClientFactory factory = new JestClientFactory();
         factory.setHttpClientConfig(new HttpClientConfig
@@ -50,6 +135,8 @@ public class Application extends Controller {
         Map<String, String> source = new LinkedHashMap<String, String>();
         source.put("url", url);
         System.out.println(source.toString());
+
+
 
 
         // build md5 hash for the url

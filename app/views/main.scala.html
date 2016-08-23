@@ -10,6 +10,125 @@
         <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script>
     </head>
     <body>
-        @content
+        <!-- @content -->
+
+        <script>
+                var formData = JSON.stringify($("#shorten-form").serializeArray());
+
+
+        </script>
+
+        <form id="shorten-form" action="/api/shorten" method="POST">
+            <input name="url" type="text" value="www.example.com">
+            <input type="submit" value="Shorten">
+        </form>
+
+        <form id="elongate-form" action="/api/elongate" method="POST">
+            <input name="hash" type="text" value="847310eb455f9ae37cb56962213c491d">
+            <input type="submit" value="Elongate">
+        </form>
+
+
+            <!-- the result of the search will be rendered inside this div -->
+        <div id="result">
+            <span id="long-text"></span>
+            <br/>
+            <span id="short-text"></span>
+        </div>
+
+        <script>
+
+                $( "#shorten-form" ).submit(function( event ) {
+
+                    // Stop form from submitting normally
+                    event.preventDefault();
+
+                    var data = {}
+                    var form = $(this), url = form.attr( "action" );
+
+                    $.each(this.elements, function(i, v){
+                        var input = $(v);
+                        data[input.attr("name")] = input.val();
+                        delete data["undefined"];
+                    });
+
+
+                    $.ajax({
+                        type:'POST',
+                        url: url,
+                        data: JSON.stringify(data),
+                        success: function(response) {
+
+                            for (var i in response) {
+                                console.log(response[i]);
+                            }
+
+                            $("span#long-text").html(response["url"]);
+
+                            if ("error" in response) {
+                                $("span#short-text").html(response["error"]);
+
+                            } else {
+                                $("span#short-text").html(window.location + response["hash"]);
+
+                            }
+
+                        },
+                        dataType: 'json',
+                        contentType: 'application/json'
+
+                    });
+
+                });
+        </script>
+
+        <script>
+
+                $( "#elongate-form" ).submit(function( event ) {
+
+                    // Stop form from submitting normally
+                    event.preventDefault();
+
+                    var data = {}
+                    var form = $(this), url = form.attr( "action" );
+
+                    $.each(this.elements, function(i, v){
+                        var input = $(v);
+                        data[input.attr("name")] = input.val();
+                        delete data["undefined"];
+                    });
+
+
+                    $.ajax({
+                        type:'POST',
+                        url: url,
+                        data: JSON.stringify(data),
+                        success: function(response) {
+
+                            for (var i in response) {
+                                console.log(response[i]);
+                            }
+
+                            $("span#long-text").html(response["url"]);
+
+                            if ("error" in response) {
+                                $("span#short-text").html(response["error"]);
+
+                            } else {
+                                $("span#short-text").html(window.location + response["hash"]);
+
+                            }
+
+                        },
+                        dataType: 'json',
+                        contentType: 'application/json'
+
+                    });
+
+                });
+        </script>
+
+
+
     </body>
 </html>
