@@ -73,7 +73,9 @@ public class Application extends Controller {
 
         Map<String, String> clientResponse = buildClientResponse(hash);
 
-        if (Boolean.valueOf(clientResponse.get("success"))) {
+        if (Boolean.valueOf(clientResponse.get("found"))) {
+
+            System.out.println("found existing value found for hash: " + hash + "; url: " + url);
 
         } else {
 

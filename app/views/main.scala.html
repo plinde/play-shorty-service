@@ -11,13 +11,7 @@
     </head>
     <body>
         <!-- @content -->
-
-        <script>
-                var formData = JSON.stringify($("#shorten-form").serializeArray());
-
-
-        </script>
-
+        
         <form id="shorten-form" action="/api/shorten" method="POST">
             <input name="url" type="text" value="http://www.example.com">
             <input type="submit" value="Shorten">
