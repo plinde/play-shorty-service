@@ -1,3 +1,5 @@
+
+
 name := "play-shorty-service"
 
 version := "1.0"
@@ -22,3 +24,24 @@ maintainer := "Peter Linde"
 dockerExposedPorts in Docker := Seq(9000)
 
 // run this with: docker run -p 9000:9000 play-2-3:1.0-SNAPSHOT
+
+//http://www.scala-sbt.org/sbt-native-packager/formats/docker.html
+//https://jazmit.github.io/2015/06/26/shippable-play-docker.html
+
+//http://stackoverflow.com/questions/33408626/how-to-pass-system-property-to-docker-containers
+//http://stackoverflow.com/questions/30494050/how-to-pass-environment-variables-to-docker-containers
+
+dockerEntrypoint := Seq(
+  "bin/play-shorty-service",
+  "-DELASTICSEARCH_PROTO=$ELASTICSEARCH_PROTO",
+  "-DELASTICSEARCH_HOST=$ELASTICSEARCH_HOST",
+  "-DELASTICSEARCH_PORT=$DELASTICSEARCH_PORT",
+  "-DELASTICSEARCH_USER=$ELASTICSEARCH_USER",
+  "-DELASTICSEARCH_PASS=$DELASTICSEARCH_PASS"
+
+  //"-Dconfig.resource=my-application-name.conf",
+  //"-Dlogger.resource=my-app-logging-conf.xml"
+
+)
+
+

@@ -5,7 +5,7 @@
 # Home page
 GET     /                               controllers.Application.index
 
-GET     /api/reroute/:hash              controllers.Application.reroute(hash: String)
+#GET     /api/reroute/:hash              controllers.Application.reroute(hash: String)
 
 POST    /api/shorten                    controllers.Application.shorten
 POST    /api/lookup                     controllers.Application.lookup
