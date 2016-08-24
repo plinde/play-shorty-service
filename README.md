@@ -12,8 +12,9 @@ docker push plinde/play-shorty-service
 ```
 
 * To run this service in a Docker container, use this example. ElasticSearch parameters are required at this time.
+* We use dockerEntrypoint overloading trick described in below article: http://blog.michaelhamrah.com/2014/11/clustering-akka-applications-with-docker-version-3/
 ```
-docker run -p 9000:9000  -e "ELASTICSEARCH_PROTO=http" -e "ELASTICSEARCH_HOST=192.168.1.71" -e "DELASTICSEARCH_PORT=9200"  -e "ELASTICSEARCH_USER=elastic" -e "DELASTICSEARCH_PASS=changeme" plinde/play-shorty-service
+docker run -p 9000:9000 plinde/play-shorty-service -DELASTICSEARCH_PROTO="http" -DELASTICSEARCH_HOST="192.168.1.71" -DELASTICSEARCH_PORT="9200"  -DELASTICSEARCH_USER="elastic" -DELASTICSEARCH_PASS="changeme"
 ```
 
 * https://hub.docker.com/r/plinde/play-shorty-service/

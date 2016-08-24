@@ -30,18 +30,25 @@ dockerExposedPorts in Docker := Seq(9000)
 
 //http://stackoverflow.com/questions/33408626/how-to-pass-system-property-to-docker-containers
 //http://stackoverflow.com/questions/30494050/how-to-pass-environment-variables-to-docker-containers
+//http://blog.michaelhamrah.com/2014/11/clustering-akka-applications-with-docker-version-3/
 
-dockerEntrypoint := Seq(
-  "bin/play-shorty-service",
-  "-DELASTICSEARCH_PROTO=$ELASTICSEARCH_PROTO",
-  "-DELASTICSEARCH_HOST=$ELASTICSEARCH_HOST",
-  "-DELASTICSEARCH_PORT=$DELASTICSEARCH_PORT",
-  "-DELASTICSEARCH_USER=$ELASTICSEARCH_USER",
-  "-DELASTICSEARCH_PASS=$DELASTICSEARCH_PASS"
+
+dockerEntrypoint in Docker := Seq(
+  "sh", "-c", "bin/play-shorty-service $*"
+)
+
+//dockerEntrypoint := Seq(
+//  "bin/play-shorty-service $*"
+
+//  "-DELASTICSEARCH_PROTO=$ELASTICSEARCH_PROTO",
+//  "-DELASTICSEARCH_HOST=$ELASTICSEARCH_HOST",
+//  "-DELASTICSEARCH_PORT=$ELASTICSEARCH_PORT",
+//  "-DELASTICSEARCH_USER=$ELASTICSEARCH_USER",
+//  "-DELASTICSEARCH_PASS=$ELASTICSEARCH_PASS"
 
   //"-Dconfig.resource=my-application-name.conf",
   //"-Dlogger.resource=my-app-logging-conf.xml"
 
-)
+//)
 
 
